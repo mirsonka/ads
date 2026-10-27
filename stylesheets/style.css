@@ -552,11 +552,13 @@ body {
   background: var(--color-yellow);
 }
 
+/* Ширина у каждой карточки своя — по самой длинной строке плюс отступы 36 с двух сторон
+   и рамки */
 .note__card {
   position: relative;
   top: calc(-29.8 * var(--u));
   left: calc(25.7 * var(--u));
-  width: calc(615 * var(--c));
+  width: calc(516 * var(--c));
   max-width: 100%;
   border: calc(2.25 * var(--c)) solid var(--color-dark);
   border-radius: calc(10 * var(--c));
@@ -586,31 +588,15 @@ body {
   background: var(--color-red);
 }
 
+/* Во всех карточках одинаковые отступы: видимый текст — на 37 от левой рамки и от шапки,
+   базовая линия последней строки — примерно на столько же от нижней рамки. По вертикали
+   паддинг меньше: над прописными и под базовой линией — половина интерлиньяжа и запас
+   шрифта. Проверено замером по пикселям. */
 .note__body {
-  display: flex;
-  align-items: flex-start;
-  gap: calc(27 * var(--c));
-  padding: calc(36 * var(--c)) calc(37.8 * var(--c)) calc(32 * var(--c)) calc(36 * var(--c));
-}
-
-/* Знак чуть ниже центра круга — как в макете */
-.note__icon {
-  display: grid;
-  width: calc(72 * var(--c));
-  height: calc(72 * var(--c));
-  flex: none;
-  place-items: center;
-  padding-top: calc(3.6 * var(--c));
-  border-radius: 50%;
-  background: var(--color-red);
-  color: var(--color-cream);
-  font-family: var(--font-display);
-  font-size: calc(54 * var(--c));
-  line-height: 1;
+  padding: calc(31 * var(--c)) calc(36 * var(--c)) calc(25 * var(--c));
 }
 
 .note__text {
-  margin-top: calc(3.8 * var(--c));
   font-size: calc(27 * var(--c));
   font-weight: 500;
   line-height: 1.35;
@@ -647,11 +633,15 @@ body {
   color: var(--color-cream);
 }
 
-/* Выше, чем в макете (115): лифт в кадре 1 остаётся на 115 и не закрывает низ букв */
+/* По центру над лифтом, как «Посмотрите» над компьютером на первом экране. Выше, чем
+   в макете (115): лифт в кадре 1 остаётся на 115 и заходит примерно на четверть
+   высоты букв */
 .lift__title {
   position: absolute;
-  top: calc(75 * var(--u));
-  left: calc(78 * var(--u));
+  top: calc(90 * var(--u));
+  right: 0;
+  left: 0;
+  text-align: center;
   font-family: var(--font-display);
   font-size: calc(280 * var(--u));
   font-weight: 400;
@@ -693,9 +683,10 @@ body {
   left: calc(50% - 634 * var(--u));
 }
 
+/* Левее, чем в макете (355): отступ самой длинной строки от края — 86, как слева */
 .lift__text--right {
   top: calc(50% - 30 * var(--u));
-  left: calc(50% + 355 * var(--u));
+  left: calc(50% + 334 * var(--u));
 }
 
 /* В переходе экран — слой высотой в окно поверх экрана 5 с карточкой.
@@ -825,6 +816,7 @@ body {
 .ask .note__card {
   top: 0;
   left: 0;
+  width: calc(428 * var(--c));
   pointer-events: auto;
 }
 
@@ -916,7 +908,7 @@ body {
 }
 
 /* Экран «В эпоху Цин…» — макет 1440×789, красный фон: облака слева (отражены по
-   горизонтали), котёнок поверх них, справа карточка-окошко (.note__card) без значка.
+   горизонтали), котёнок поверх них, справа карточка-окошко (.note__card).
    В переходе к следующему экрану высота экрана — окно, поэтому по вертикали всё
    отсчитано от середины, а котёнок — от низа: картинка всегда уходит за нижний край
    (в макете — на 46), и её срез не виден, какой бы высоты ни было окно. */
@@ -959,18 +951,8 @@ body {
 .qing .note__card {
   top: 0;
   left: 0;
-  width: calc(432.85 * var(--c));
+  width: calc(447 * var(--c));
   transform: rotate(-.99deg);
-}
-
-.qing .note__body {
-  min-height: calc(260 * var(--c));
-  align-items: center;
-  padding: calc(20 * var(--c)) calc(59.1 * var(--c)) calc(20 * var(--c)) calc(52.87 * var(--c));
-}
-
-.qing .note__text {
-  margin-top: 0;
 }
 
 /* Экран «В Японии в XIX веке…» — макет 1440×655, зеркальный к предыдущему: карточка
@@ -995,20 +977,14 @@ body {
 .chindon .note__card {
   top: 0;
   left: 0;
-  width: calc(516.63 * var(--c));
+  width: calc(558 * var(--c));
   transform: rotate(-.99deg);
 }
 
-.chindon .note__body {
-  min-height: calc(289.4 * var(--c));
-  align-items: center;
-  padding: calc(17 * var(--c)) calc(12 * var(--c)) calc(17 * var(--c)) calc(17 * var(--c));
-}
-
 /* Строки заданы переносами из макета; карточка масштабируется вместе с текстом (--c),
-   поэтому длинная строка «…рекламщики —» не рвётся ни на какой ширине */
+   поэтому длинная строка «…рекламщики —» не рвётся ни на какой ширине. Первая строка
+   короткая: в правый верхний угол карточки заходят гуси */
 .chindon .note__text {
-  margin-top: 0;
   white-space: nowrap;
 }
 
@@ -1121,27 +1097,28 @@ body {
   border-radius: calc(5.87 * var(--k));
 }
 
-/* Блоки 395 в высоту с центром на 667.5, текст в них по центру по вертикали */
+/* Колонки одной ширины с полями 78 у краёв экрана. Верх обеих — на одной линии:
+   прописные первой строки на уровне верха экрана телевизора (440 + 71), с поправкой
+   на интерлиньяж (≈ 13). Строки переносятся сами, без переносов из макета. */
 .show__text {
   position: absolute;
-  top: calc(470 * var(--u));
-  display: flex;
-  height: calc(395 * var(--u));
-  flex-direction: column;
-  justify-content: center;
+  top: calc(498 * var(--u));
+  width: calc(320 * var(--u));
   font-size: max(15px, calc(20 * var(--u)));
   font-weight: 500;
   line-height: 2;
 }
 
+.show__text p + p {
+  margin-top: .5lh;
+}
+
 .show__text--left {
   left: calc(78 * var(--u));
-  width: calc(394 * var(--u));
 }
 
 .show__text--right {
-  left: calc(1045 * var(--u));
-  width: calc(317 * var(--u));
+  left: calc(1042 * var(--u));
 }
 
 /* Экран «Много — не значит плохо» — макет 1440×818, красный фон, только заголовок.
@@ -1198,7 +1175,7 @@ body {
 }
 
 /* Экран «Иногда перегруженный экран…» — макет 1440×818, красный фон, по центру
-   карточка-окошко со значком (та же, что на экране 5, .note__card), по бокам тексты.
+   карточка-окошко (та же, что на экране 5, .note__card), по бокам тексты.
    Карточка влетает слева, как брошенный сюрикен (scripts/main.js). */
 
 .dense {
@@ -1246,20 +1223,12 @@ body {
 .dense .note__card {
   top: 0;
   left: 0;
-  width: calc(650.45 * var(--c));
+  width: calc(517 * var(--c));
   /* секция задаёт кремовый текст для боковых абзацев, в карточке он тёмный */
   color: var(--color-dark);
   pointer-events: auto;
 }
 
-/* Текст по центру карточки по вертикали, значок — на 36 ниже шапки, как на экране 5 */
-.dense .note__body {
-  padding: calc(22 * var(--c)) calc(37.8 * var(--c)) calc(22 * var(--c)) calc(36 * var(--c));
-}
-
-.dense .note__icon {
-  margin-top: calc(14 * var(--c));
-}
 
 /* Экран «Посмотрите снова» — макет 1440×789, жёлтый фон, заголовок в две строки
    по центру по вертикали. Строки выезжают с разных сторон (scripts/main.js), поэтому
@@ -1298,7 +1267,7 @@ body {
   color: var(--color-red);
 }
 
-/* Экран «Изменились технологии…» — макет 1440×547: та же карточка со значком и в том
+/* Экран «Изменились технологии…» — макет 1440×547: та же карточка и в том
    же месте, что на экране 5, поэтому секция — .note со всеми её стилями.
 
    Переход «Посмотрите снова» → карточка: блок закрепляется, строки заголовка
@@ -1322,6 +1291,10 @@ body {
   min-height: 0;
   background: none;
   pointer-events: none;
+}
+
+.stop .note__card {
+  width: calc(476 * var(--c));
 }
 
 .outro--active .stop .note__card {
@@ -1442,23 +1415,15 @@ body {
 /* Мобильные: заголовок на всю ширину, компьютер крупнее */
 
 @media (max-width: 700px) {
-  /* Карточки-окошки на всю ширину экрана без полей: --c — пиксель карточки
-     (ширина карточки в макете — в знаменателе) */
+  /* Карточки-окошки в одном масштабе, чтобы текст в них был одного размера: --c —
+     пиксель карточки, самая широкая («В Японии…», 558) — на всю ширину экрана
+     без полей, остальные уже и по центру */
   .note,
-  .ask {
-    --c: calc((100vw - 32 * var(--m)) / 615);
-  }
-
-  .qing {
-    --c: calc((100vw - 32 * var(--m)) / 433);
-  }
-
-  .chindon {
-    --c: calc((100vw - 32 * var(--m)) / 517);
-  }
-
+  .ask,
+  .qing,
+  .chindon,
   .dense {
-    --c: calc((100vw - 32 * var(--m)) / 650);
+    --c: calc((100vw - 32 * var(--m)) / 558);
   }
 
   /* Экран 3: на планшетах отступы от ширины 1024, здесь — от 390 */
@@ -1594,6 +1559,7 @@ body {
 
   .lift__title {
     top: calc(56 * var(--m));
+    right: calc(16 * var(--m));
     left: calc(16 * var(--m));
     font-size: calc((100vw - 32 * var(--m)) * .26);
     line-height: .818;

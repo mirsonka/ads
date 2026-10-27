@@ -51,7 +51,7 @@ const layoutPx = (value) =>
 // При prefers-reduced-motion текст просто виден.
 (() => {
   const texts = document.querySelectorAll(
-    ".noise__text, .laptop__text, .show__text, .dense__text",
+    ".noise__text, .laptop__text, .show__text p, .dense__text",
   );
 
   if (
@@ -64,14 +64,28 @@ const layoutPx = (value) =>
 
   gsap.registerPlugin(ScrollTrigger, SplitText);
 
+  // «Продажа через шоу» на десктопе: абзацы проявляются по очереди, когда компьютер
+  // почти на месте, — за последние 40% экрана скролла до закрепления: сначала первый
+  // абзац слева, затем второй и подпись справа. [start, end] —
+  // положение низа экрана относительно окна; порядок — как абзацы идут в разметке.
+  const showTexts = [...document.querySelectorAll(".show__text p")];
+  const showSteps = [
+    ["bottom 140%", "bottom 115%"],
+    ["bottom 120%", "bottom bottom"],
+    ["bottom 115%", "bottom bottom"],
+  ];
+
   gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
     texts.forEach((text) => {
       SplitText.create(text, {
         type: "lines",
         linesClass: "text-line",
         autoSplit: true,
-        onSplit: (self) =>
-          gsap.from(self.lines, {
+        onSplit: (self) => {
+          const step = showSteps[showTexts.indexOf(text)];
+          const desktop = matchMedia("(min-width: 701px)").matches;
+
+          return gsap.from(self.lines, {
             opacity: 0,
             y: () => layoutPx(30),
             ease: "power1.out",
@@ -89,9 +103,16 @@ const layoutPx = (value) =>
                 endTrigger: text.closest(".show, .dense"),
                 end: "clamp(bottom bottom)",
               }),
+              ...(step &&
+                desktop && {
+                  trigger: text.closest(".show"),
+                  start: `clamp(${step[0]})`,
+                  end: `clamp(${step[1]})`,
+                }),
               scrub: 0.6,
             },
-          }),
+          });
+        },
       });
     });
   });
@@ -496,8 +517,11 @@ const layoutPx = (value) =>
 
   // Длительности — в экранах скролла (длина закрепления считается из длины таймлайна).
   // pause — «холостой» скролл перед сменой: экран с котёнком стоит на месте.
+  // hold — такой же скролл в конце: экран с гусями стоит, пока читают карточку,
+  // а гуси летят дальше (см. cruise ниже).
   const pause = 0.5;
   const length = 1.5;
+  const hold = 0.5;
 
   const timeline = gsap
     .timeline({ defaults: { ease: "power1.inOut", duration: length } })
@@ -534,20 +558,55 @@ const layoutPx = (value) =>
     });
   };
 
+  // Остановка в конце: экран стоит, а гуси летят дальше — набирают высоту (на climbBy
+  // ширины экрана) и лишь чуть смещаются влево (sideBy): головы гусей у правого края
+  // карточки, и сильнее влево они наползли бы на текст. Покачиваются слабее (calm),
+  // один взмах. Раскачка нарастает с нуля: в начале остановки гуси ровно на месте,
+  // без рывка после fly(1).
+  const climbBy = 0.03;
+  const sideBy = 0.006;
+  const calm = 0.6;
+  const cruise = (progress) => {
+    const phase = progress * Math.PI * 2;
+    const ramp = Math.sin((Math.min(1, progress * 3) * Math.PI) / 2);
+    const lift = calm * bob * chindon.offsetWidth * Math.sin(phase) * ramp;
+
+    gsap.set(geese, {
+      xPercent: ((-sideBy * chindon.offsetWidth * progress) / geese.offsetWidth) * 100,
+      y: -climbBy * chindon.offsetWidth * progress - lift,
+      rotation: calm * tilt * Math.cos(phase) * ramp,
+    });
+  };
+
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const flight = { progress: 0 };
+    const glide = { progress: 0 };
 
-    timeline.fromTo(
-      flight,
-      { progress: 0 },
-      {
-        progress: 1,
-        ease: "none",
-        onUpdate: () => fly(flight.progress),
-      },
-      pause,
-    );
+    timeline
+      .fromTo(
+        flight,
+        { progress: 0 },
+        {
+          progress: 1,
+          ease: "none",
+          onUpdate: () => fly(flight.progress),
+        },
+        pause,
+      )
+      .fromTo(
+        glide,
+        { progress: 0 },
+        {
+          progress: 1,
+          duration: hold,
+          ease: "none",
+          onUpdate: () => cruise(glide.progress),
+        },
+        pause + length,
+      );
   }
+
+  timeline.to({}, { duration: hold }, pause + length);
 
   ScrollTrigger.create({
     animation: timeline,
