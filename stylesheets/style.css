@@ -1,0 +1,1907 @@
+@import url("reset.css");
+@import url("fonts.css");
+@import url("animation.css");
+
+:root {
+  --color-yellow: #f9e75c;
+  --color-dark: #2d1e0b;
+  --color-red: #c51f23;
+  --color-cream: #fef9e6;
+
+  --font-display: "Bebas Neue Cyrillic", Impact, "Arial Narrow Bold", sans-serif;
+  --font-text: Inter, Arial, Helvetica, sans-serif;
+
+  /* Пиксель макета во вьюпортах: значения в стилях записаны как calc(N * var(--…)),
+     где N — пиксели из Figma, поэтому их легко сверять с макетом.
+     --u — десктоп (макет шириной 1440), --t — планшеты до 1024px, --m — телефоны
+     до 700px (раскладка рассчитана на ширину 390). */
+  --u: calc(100vw / 1440);
+  --t: calc(100vw / 1024);
+  --m: calc(100vw / 390);
+
+  color-scheme: light;
+  font-family: var(--font-text);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-yellow);
+  color: var(--color-dark);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Hero — макет 1440×824 */
+
+.hero {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: calc(57 * var(--u)) 0 calc(10 * var(--u));
+  background: var(--color-yellow);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(335.3 * var(--u));
+  letter-spacing: .01em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* «удар»: резко крупнее, затем немного меньше — см. title-punch в animation.css */
+  animation: title-punch 1.6s infinite;
+}
+
+/* Сцена: компьютер и экран. --k — один пиксель макета внутри сцены (ширина 734). */
+
+.hero__scene {
+  --k: calc(100cqw / 734);
+
+  position: relative;
+  width: calc(734 * var(--u));
+  margin-top: calc(-160 * var(--u));
+  container-type: inline-size;
+}
+
+.hero__computer {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero__screen {
+  position: absolute;
+  top: calc(71 * var(--k));
+  left: calc(182 * var(--k));
+  width: calc(391.2 * var(--k));
+  height: calc(268.3 * var(--k));
+  overflow: hidden;
+  border-radius: calc(5.87 * var(--k));
+  background: var(--color-cream);
+}
+
+.screen-slot {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(5 * var(--k));
+  border-radius: calc(11.59 * var(--k));
+  background: rgb(127 127 127 / 8%);
+}
+
+.screen-slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: calc(.966 * var(--k)) dashed var(--color-dark);
+  border-radius: inherit;
+  opacity: .35;
+}
+
+.screen-slot__icon {
+  width: calc(27.04 * var(--k));
+  height: calc(27.04 * var(--k));
+}
+
+.screen-slot__caption {
+  font-size: calc(11.59 * var(--k));
+  font-weight: 500;
+  line-height: 1.408;
+  letter-spacing: .0108em;
+  text-align: center;
+  opacity: .75;
+}
+
+/* Ряд мониторов — макет 1440×800, мониторы 582×462 с шагом 584.
+   Бесконечная лента: трек = две одинаковые группы, сдвигается влево ровно на одну группу.
+   Отрицательный margin-left на один шаг — чтобы при старте первый монитор стоял на 45px,
+   как в макете, а слева уже был «хвост» предыдущего (иначе на стыке цикла будет скачок). */
+
+.monitors {
+  --item: calc(582 * var(--u));
+  --gap: calc(2 * var(--u));
+  --offset: calc(45 * var(--u));
+  /* 6 мониторов за цикл: скорость ленты — шаг монитора за 6 с */
+  --duration: 36s;
+
+  display: flex;
+  min-height: calc(800 * var(--u));
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-red);
+}
+
+.monitors__track {
+  display: flex;
+  flex: none;
+  margin-left: calc(var(--offset) - var(--item) - var(--gap));
+  animation: marquee-left var(--duration) linear infinite;
+  will-change: transform;
+}
+
+.monitors__group {
+  display: flex;
+  flex: none;
+  gap: var(--gap);
+  padding-right: var(--gap);
+}
+
+.monitors__item {
+  position: relative;
+  flex: none;
+  width: var(--item);
+}
+
+.monitors__body {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Ролик лежит под картинкой и виден только сквозь прозрачное стекло монитора:
+   отверстие в computer-red.png — 22.3% / 12.18% / 52.7% × 45.93%, здесь с запасом
+   под рамку (она толщиной ~8.6%), чтобы по краям стекла не просвечивал фон. */
+.monitors__item .tv-video {
+  inset: auto;
+  top: 11.2%;
+  left: 21.5%;
+  width: 54.3%;
+  height: 47.9%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title,
+  .monitors__track,
+  .noise__img {
+    animation: none;
+  }
+}
+
+/* Переход: красный слой лежит поверх hero и при скролле поднимается снизу.
+   Класс ставит scripts/main.js, сдвиг (translateY 100% → 0) целиком задаёт GSAP —
+   transform здесь не указываем, иначе GSAP прочитает его как дополнительный y. */
+
+.wipe--active {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Слой накрывает hero целиком (hero бывает выше окна — тогда после перехода снизу не
+   останется недокрытой полоски). Ряд мониторов стоит по центру первого экрана окна:
+   именно эта часть видна, пока экран закреплён. Сдвиг слоя задаёт GSAP. */
+.wipe--active .monitors {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  align-items: flex-start;
+  min-height: 0;
+  padding: 0;
+}
+
+.wipe--active .monitors__track {
+  /* 462 / 582 — пропорция картинки монитора */
+  margin-top: calc((100vh - var(--item) * 462 / 582) / 2);
+  margin-top: calc((100svh - var(--item) * 462 / 582) / 2);
+}
+
+/* Экран 3 «Очень много шума» — макет 1440×824, высота урезана до 780 (ниже 724 объектов нет).
+   Коллаж, поэтому позиции абсолютные в пикселях макета.
+   Головы вращаются вокруг своего центра: наклон из макета задан в --angle, а left/top
+   пересчитаны из угла слоя Figma так, чтобы в покое голова стояла ровно как в макете.
+   При вращении содержимое картинок не выходит за 39…751px по высоте — ничего не обрезается. */
+
+.noise {
+  position: relative;
+  height: calc(780 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.noise__text {
+  position: absolute;
+  width: calc(488 * var(--u));
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 2;
+}
+
+/* Переносы строк из макета. Блоки, а не <br>: SplitText честно делит по ним на строки,
+   а на узких экранах они становятся инлайновыми и текст переносится сам. */
+.noise__row {
+  display: block;
+}
+
+/* Неразрывные пары «предлог + слово». Вместо &nbsp;: SplitText заменяет его обычным пробелом */
+.nobr {
+  white-space: nowrap;
+}
+
+.noise__text--top {
+  top: calc(138 * var(--u));
+  left: calc(148 * var(--u));
+}
+
+.noise__text--bottom {
+  top: calc(505 * var(--u));
+  left: calc(914 * var(--u));
+}
+
+.noise__img {
+  --angle: 0deg;
+  --spin: 12s; /* время полного оборота, одинаковое для всех голов */
+  --float: 4s;
+
+  position: absolute;
+  height: auto;
+  rotate: var(--angle);
+  animation:
+    head-spin var(--spin) linear infinite,
+    head-float var(--float) ease-in-out infinite alternate;
+  will-change: rotate, translate;
+}
+
+/* Увеличена в 1.2 раза относительно макета (359 → 430.8) вокруг центра; центр поднят
+   на 8px, чтобы при вращении голова не обрезалась низом экрана. */
+.noise__img--center {
+  --float: 4.6s;
+
+  top: calc(340.9 * var(--u));
+  left: calc(380.1 * var(--u));
+  width: calc(430.8 * var(--u));
+}
+
+.noise__img--left {
+  --angle: -21.2deg;
+  --float: 3.6s;
+
+  top: calc(406.5 * var(--u));
+  left: calc(103 * var(--u));
+  width: calc(167 * var(--u));
+  animation-direction: reverse, alternate;
+}
+
+.noise__img--right {
+  --angle: 21deg;
+  --float: 4.2s;
+
+  top: calc(276.4 * var(--u));
+  left: calc(1177.5 * var(--u));
+  width: calc(185 * var(--u));
+}
+
+/* В Figma этот слой лежит поверх фрейма, а не внутри него */
+.noise__img--glasses {
+  --float: 5s;
+
+  top: calc(39 * var(--u));
+  left: calc(784 * var(--u));
+  width: calc(321 * var(--u));
+  height: calc(400 * var(--u));
+  object-fit: cover;
+  animation-direction: reverse, alternate;
+}
+
+/* Планшеты и телефоны: текст — фото — текст в колонку, фото собраны в компактный коллаж */
+
+@media (max-width: 1024px) {
+  .noise {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(40 * var(--t));
+    padding: calc(72 * var(--t)) calc(24 * var(--t));
+  }
+
+  .noise__text {
+    position: static;
+    width: 100%;
+    max-width: calc(488 * var(--t));
+    font-size: max(15px, calc(17 * var(--t)));
+    line-height: 1.85;
+  }
+
+  .noise__row {
+    display: inline;
+  }
+
+  .noise__collage {
+    position: relative;
+    width: min(100%, calc(440 * var(--t)));
+    aspect-ratio: 1 / 1.15;
+  }
+
+  .noise__img--glasses {
+    top: 0;
+    left: 30%;
+    width: 44%;
+    height: auto;
+  }
+
+  .noise__img--center {
+    top: 40.1%;
+    left: 16%;
+    width: 72%;
+  }
+
+  .noise__img--left {
+    top: 30.2%;
+    left: 3.4%;
+    width: 30%;
+  }
+
+  .noise__img--right {
+    top: 33.4%;
+    left: 68.2%;
+    width: 27%;
+  }
+}
+
+/* Экран 4 «Очень громко» — макет 1440×712, на сайте высотой в экран.
+   Заголовок отцентрован по вертикали как в макете, человек стоит на нижнем крае.
+   Жёлтый клин — пересечение повёрнутого прямоугольника из Figma с кадром: граница идёт
+   от (481, 0) до (1440, 633). Это положение без JS; при скролле клин ведёт scripts/main.js. */
+
+.loud {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-red);
+}
+
+.loud__wedge,
+.loud__ink {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(33.41% 0, 100% 0, 100% 88.89%);
+}
+
+.loud__wedge {
+  background: var(--color-yellow);
+}
+
+/* Тёмная копия заголовка поверх светлой. Слой того же размера, что и клин, и с тем же
+   clip-path, поэтому тёмными становятся ровно те части букв, что лежат на жёлтом. */
+.loud__ink {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.loud__title {
+  position: absolute;
+  z-index: 1;
+  top: calc(50% - 229 * var(--u));
+  left: calc(84 * var(--u));
+  width: calc(787 * var(--u));
+  color: var(--color-cream);
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+.loud__title--ink {
+  color: var(--color-dark);
+}
+
+.loud__man {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(-9 * var(--u));
+  left: calc(1012 * var(--u));
+  width: calc(316 * var(--u));
+  height: auto;
+}
+
+/* Экран 5 «Очень много шума» — макет 1440×712, жёлтый фон. Заголовок стоит там же
+   и того же размера, что на экране 4. Компьютеры лежат поверх заголовка; экран
+   компьютера — тёмная подложка с растянутой картинкой помех, координаты в % от компьютера.
+   По вертикали всё отсчитано от середины (356 в макете), как на экране 4: при высоте 712
+   это ровно макет, а в переходе, где экран высотой в окно, заголовок встаёт на место
+   заголовка «Очень громко». */
+
+.din {
+  position: relative;
+  height: calc(712 * var(--u));
+  overflow: hidden;
+  background: var(--color-yellow);
+}
+
+.din__title {
+  position: absolute;
+  top: calc(50% - 229 * var(--u));
+  left: calc(84 * var(--u));
+  color: var(--color-dark);
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+.din__title .din__accent {
+  display: block;
+  color: var(--color-red);
+}
+
+.pc {
+  position: absolute;
+}
+
+.pc__body {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pc__screen {
+  position: absolute;
+  width: 53.3%;
+  height: 46.1%;
+  overflow: hidden;
+  border-radius: 1.5% / 2.19%;
+  background: var(--color-dark) center / 100% 100% no-repeat;
+}
+
+/* Живые помехи (scripts/main.js): холст 96×66 растянут на экран, как картинка из макета */
+.pc__noise {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pc--small {
+  top: calc(50% + 6 * var(--u));
+  left: calc(689.8 * var(--u));
+  width: calc(240.1 * var(--u));
+}
+
+.pc--small .pc__screen {
+  top: 12.31%;
+  left: 25.4%;
+  background-image: url("../assets/images/screen-noise-1.png");
+}
+
+.pc--large {
+  top: calc(50% - 69 * var(--u));
+  left: calc(948.3 * var(--u));
+  width: calc(334.7 * var(--u));
+}
+
+.pc--large .pc__screen {
+  top: 12.14%;
+  left: 24.39%;
+  background-image: url("../assets/images/screen-noise-2.png");
+}
+
+/* Переход экран 4 → экран 5: «Очень много шума» лежит поверх «Очень громко» за правым
+   краем и при скролле въезжает в кадр, а «Очень громко» уходит влево.
+   Класс ставит scripts/main.js, сдвиги (xPercent) целиком задаёт GSAP.
+   Без JS экраны просто идут друг под другом. */
+
+.swap--active {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Экран 5 занимает ровно место экрана 4 — высотой в окно, как он */
+.swap--active .din {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  height: auto;
+  /* закрывает просвет в доли пикселя на стыке с уезжающим «Очень громко» (к этому
+     моменту он целиком жёлтый) — иначе в щель видна красная обёртка закрепления */
+  box-shadow: -2px 0 0 var(--color-yellow);
+}
+
+/* Карточка-окошко — макет: секция 1440×546, жёлтый фон, карточка 615×253 повёрнута на −2°,
+   центр карточки на 25.7px правее и 29.8px выше центра секции.
+   --c — один пиксель карточки: на десктопе и планшетах это --u, на телефонах карточка
+   растянута на ширину экрана без полей (см. @media в конце файла). Так же устроены
+   карточки на экранах «Сегодня реклама…», «В эпоху Цин…», «В Японии…» и «Иногда…».
+   Внутри карточка свёрстана потоком, отступы взяты из макета. */
+
+.note {
+  --c: var(--u);
+
+  position: relative;
+  display: flex;
+  min-height: calc(546 * var(--u));
+  align-items: center;
+  justify-content: center;
+  background: var(--color-yellow);
+}
+
+.note__card {
+  position: relative;
+  top: calc(-29.8 * var(--u));
+  left: calc(25.7 * var(--u));
+  width: calc(615 * var(--c));
+  max-width: 100%;
+  border: calc(2.25 * var(--c)) solid var(--color-dark);
+  border-radius: calc(10 * var(--c));
+  background: var(--color-cream);
+  box-shadow: calc(10.5 * var(--c)) calc(10.5 * var(--c)) 0 var(--color-dark);
+  transform: rotate(-2deg);
+}
+
+/* Шапка окна с тремя «кнопками» */
+.note__bar {
+  display: flex;
+  height: calc(30.75 * var(--c));
+  align-items: center;
+  gap: calc(6 * var(--c));
+  padding-left: calc(13.5 * var(--c));
+  border-bottom: calc(2.25 * var(--c)) solid var(--color-dark);
+}
+
+.note__dot {
+  width: calc(10.5 * var(--c));
+  height: calc(10.5 * var(--c));
+  border: calc(1.5 * var(--c)) solid var(--color-dark);
+  border-radius: 50%;
+}
+
+.note__dot--red {
+  background: var(--color-red);
+}
+
+.note__body {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(27 * var(--c));
+  padding: calc(36 * var(--c)) calc(37.8 * var(--c)) calc(32 * var(--c)) calc(36 * var(--c));
+}
+
+/* Знак чуть ниже центра круга — как в макете */
+.note__icon {
+  display: grid;
+  width: calc(72 * var(--c));
+  height: calc(72 * var(--c));
+  flex: none;
+  place-items: center;
+  padding-top: calc(3.6 * var(--c));
+  border-radius: 50%;
+  background: var(--color-red);
+  color: var(--color-cream);
+  font-family: var(--font-display);
+  font-size: calc(54 * var(--c));
+  line-height: 1;
+}
+
+.note__text {
+  margin-top: calc(3.8 * var(--c));
+  font-size: calc(27 * var(--c));
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* В переходе карточка — слой высотой в окно поверх экрана 5. Сдвиг слоя (xPercent)
+   задаёт GSAP: слой въезжает слева, экран 5 под ним стоит на месте. */
+.swap--active .note {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  min-height: 0;
+  padding: 0 calc(16 * var(--u));
+  background: none;
+  pointer-events: none;
+}
+
+.swap--active .note__card {
+  pointer-events: auto;
+}
+
+/* Экран «в лифте» — два кадра из макета, 1440 в ширину:
+   кадр 1 (переход) — заголовок и верх лифта, оба с отступом 115 от верха экрана;
+   кадр 2 (итог, высота 788) — лифт 530×942 по центру, заголовка нет, по бокам два текста.
+   Здесь свёрстан кадр 2, всё по вертикали отсчитано от середины экрана. Кадр 1 —
+   стартовое состояние анимации в scripts/main.js: заголовок на своём месте, лифт
+   поднят к заголовку и увеличен до 551 в ширину, как в макете. */
+
+.lift {
+  position: relative;
+  height: calc(788 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.lift__title {
+  position: absolute;
+  top: calc(115 * var(--u));
+  left: calc(78 * var(--u));
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+/* Без JS виден итоговый кадр, где заголовка нет: он остаётся только для скринридеров */
+.swap:not(.swap--active) .lift__title {
+  clip-path: inset(50%);
+}
+
+/* Сцена центрирует лифт; сдвиг и масштаб самой картинки задаёт GSAP */
+.lift__stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lift__door {
+  width: calc(530.2 * var(--u));
+  height: auto;
+  flex: none;
+}
+
+.lift__text {
+  position: absolute;
+  width: calc(321 * var(--u));
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.lift__text--left {
+  top: calc(50% - 287 * var(--u));
+  left: calc(50% - 634 * var(--u));
+}
+
+.lift__text--right {
+  top: calc(50% - 30 * var(--u));
+  left: calc(50% + 355 * var(--u));
+}
+
+/* В переходе экран — слой высотой в окно поверх экрана 5 с карточкой.
+   Подъём слоя (yPercent) задаёт GSAP. */
+.swap--active .lift {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  height: auto;
+}
+
+/* Экран «ноутбук» — макет 1440×788, обычная секция после закреплённого блока.
+   Ноутбук 544×544 повёрнут на −4.67° вместе с экраном: картинка экрана лежит под
+   ноутбуком, а в ноутбуке экран прозрачный. Координаты экрана — в % от ноутбука
+   (пересчитаны из макета в систему повёрнутого ноутбука). */
+
+.laptop {
+  position: relative;
+  height: calc(788 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.laptop__device {
+  position: absolute;
+  top: calc(50% - 277 * var(--u));
+  left: calc(50% - 544 * var(--u));
+  width: calc(544 * var(--u));
+  transform: rotate(-4.67deg);
+}
+
+.laptop__body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.laptop__screen {
+  position: absolute;
+  top: 11.03%;
+  left: 10.11%;
+  width: 79.6%;
+  height: 52.57%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Картинка крупнее экрана и прижата к левому верхнему углу — кадрирование из макета */
+.laptop__shot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 147.45%;
+  max-width: none;
+  height: 125.6%;
+}
+
+.laptop__text {
+  position: absolute;
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.laptop__text--top {
+  top: calc(50% - 197 * var(--u));
+  left: calc(50% + 56 * var(--u));
+  width: calc(391 * var(--u));
+}
+
+.laptop__text--bottom {
+  top: calc(50% + 25 * var(--u));
+  left: calc(50% + 199 * var(--u));
+  width: calc(446 * var(--u));
+}
+
+/* Экран «Сегодня реклама добралась…» — макет 1440×610, жёлтый фон, два текста сверху
+   по краям и карточка-окошко (та же, что на экране 5, стили .note__card) по центру.
+   Всё лежит в слое .ask__layer: в переходе экран едет целиком, вместе с карточкой. */
+
+.ask {
+  --c: var(--u);
+
+  position: relative;
+  height: calc(610 * var(--u));
+  overflow: hidden;
+  background: var(--color-yellow);
+}
+
+.ask__layer,
+.ask__window {
+  position: absolute;
+  inset: 0;
+}
+
+/* По вертикали от середины экрана, как карточка: в макете верх текстов на 241 выше
+   центра (64 при высоте 610). В переходе экран высотой в окно, и при отсчёте от верха
+   между текстами и карточкой оставалась бы пустота. */
+.ask__text {
+  position: absolute;
+  top: calc(50% - 241 * var(--u));
+  width: calc(317 * var(--u));
+  font-size: max(14px, calc(18 * var(--u)));
+  font-weight: 500;
+  line-height: 1.667;
+}
+
+.ask__text--left {
+  left: calc(87 * var(--u));
+}
+
+.ask__text--right {
+  left: calc(1054 * var(--u));
+}
+
+/* Центр карточки в макете совпадает с центром экрана */
+.ask__window {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 calc(16 * var(--u));
+  pointer-events: none;
+}
+
+.ask .note__card {
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+}
+
+/* Переход ноутбук → жёлтый экран: блок закрепляется, жёлтый слой с текстами
+   поднимается снизу, карточка выезжает снизу в центр окна. Класс ставит scripts/main.js,
+   сдвиги задаёт GSAP. Без JS экраны идут друг под другом. */
+
+.cover--active {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Экран ноутбука не ниже окна, жёлтый экран — нижний экран блока высотой в окно:
+   блок закрепляется, когда его низ доходит до низа окна, и видна именно эта часть.
+   Если ноутбук выше окна, его верх к этому моменту уже уехал из кадра. */
+.cover--active .laptop {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.cover--active .ask {
+  position: absolute;
+  z-index: 1;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+  background: none;
+}
+
+.cover--active .ask__layer {
+  background: var(--color-yellow);
+}
+
+/* Экран «улица уже кричала» — макет 1440×568, на сайте высотой в окно.
+   Заголовок как на экранах 4 и 5, по вертикали всё отсчитано от середины. */
+
+.street {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.street__title {
+  position: absolute;
+  top: calc(50% - 229 * var(--u));
+  left: calc(50% - 561 * var(--u));
+  width: calc(1123 * var(--u));
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+/* По вертикали — по центру второй строки заголовка (от 50% до 50% + 229): блок растянут
+   на эту полосу, высота по тексту, margin auto ставит его посередине. Не через transform —
+   им подпись двигает GSAP, когда она выезжает справа. */
+.street__text {
+  position: absolute;
+  top: 50%;
+  bottom: calc(50% - 229 * var(--u));
+  left: calc(1043 * var(--u));
+  height: fit-content;
+  margin-block: auto;
+  width: calc(258 * var(--u));
+  font-size: max(13px, calc(16 * var(--u)));
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -.011em;
+}
+
+/* В переходе — слой высотой в окно поверх жёлтого экрана в том же закреплённом блоке.
+   Въезд слева (xPercent) задаёт scripts/main.js. */
+.cover--active .street {
+  position: absolute;
+  z-index: 2;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Экран «В эпоху Цин…» — макет 1440×789, красный фон: облака слева (отражены по
+   горизонтали), котёнок поверх них, справа карточка-окошко (.note__card) без значка.
+   В переходе к следующему экрану высота экрана — окно, поэтому по вертикали всё
+   отсчитано от середины, а котёнок — от низа: картинка всегда уходит за нижний край
+   (в макете — на 46), и её срез не виден, какой бы высоты ни было окно. */
+
+.qing {
+  --c: var(--u);
+
+  position: relative;
+  height: calc(789 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+}
+
+.qing__clouds {
+  position: absolute;
+  top: calc(50% - 369.5 * var(--u));
+  left: calc(-6 * var(--u));
+  width: calc(639 * var(--u));
+  height: calc(798 * var(--u));
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.qing__cat {
+  position: absolute;
+  bottom: calc(-46 * var(--u));
+  left: calc(195 * var(--u));
+  width: calc(425 * var(--u));
+  height: calc(566 * var(--u));
+  object-fit: cover;
+  transform: rotate(-1.03deg);
+}
+
+.qing__window {
+  position: absolute;
+  top: calc(50% - 104 * var(--u));
+  left: calc(751.2 * var(--u));
+}
+
+.qing .note__card {
+  top: 0;
+  left: 0;
+  width: calc(432.85 * var(--c));
+  transform: rotate(-.99deg);
+}
+
+.qing .note__body {
+  min-height: calc(260 * var(--c));
+  align-items: center;
+  padding: calc(20 * var(--c)) calc(59.1 * var(--c)) calc(20 * var(--c)) calc(52.87 * var(--c));
+}
+
+.qing .note__text {
+  margin-top: 0;
+}
+
+/* Экран «В Японии в XIX веке…» — макет 1440×655, зеркальный к предыдущему: карточка
+   слева, справа облака (без отражения) и гуси поверх них и края карточки.
+   По вертикали всё от середины — как у экрана выше. */
+
+.chindon {
+  --c: var(--u);
+
+  position: relative;
+  height: calc(655 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+}
+
+.chindon__window {
+  position: absolute;
+  top: calc(50% - 148.5 * var(--u));
+  left: calc(210.8 * var(--u));
+}
+
+.chindon .note__card {
+  top: 0;
+  left: 0;
+  width: calc(516.63 * var(--c));
+  transform: rotate(-.99deg);
+}
+
+.chindon .note__body {
+  min-height: calc(289.4 * var(--c));
+  align-items: center;
+  padding: calc(17 * var(--c)) calc(12 * var(--c)) calc(17 * var(--c)) calc(17 * var(--c));
+}
+
+/* Строки заданы переносами из макета; карточка масштабируется вместе с текстом (--c),
+   поэтому длинная строка «…рекламщики —» не рвётся ни на какой ширине */
+.chindon .note__text {
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.chindon__clouds {
+  position: absolute;
+  top: calc(50% - 273.5 * var(--u));
+  left: calc(838 * var(--u));
+  width: calc(639 * var(--u));
+  height: calc(798 * var(--u));
+  object-fit: cover;
+}
+
+.chindon__geese {
+  position: absolute;
+  top: calc(50% - 332.5 * var(--u));
+  left: calc(646 * var(--u));
+  width: calc(621 * var(--u));
+  height: calc(654 * var(--u));
+  object-fit: cover;
+}
+
+/* Переход Цин → Япония: блок закрепляется на высоту окна, экран с котёнком уезжает
+   влево, экран с гусями въезжает справа поверх него (xPercent задаёт scripts/main.js).
+   Без JS экраны идут друг под другом. */
+
+.drift--active {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.drift--active .qing {
+  height: 100%;
+}
+
+.drift--active .chindon {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  height: auto;
+  /* закрывает просвет в доли пикселя на стыке с уезжающим экраном */
+  box-shadow: -2px 0 0 var(--color-red);
+}
+
+/* Экран «продажа через шоу» — макет 1440×1053, жёлтый фон. Заголовок как на экранах
+   выше, под ним компьютер (тот же, что на первом экране) на клетчатом полу, по бокам
+   два текста. Компьютер въезжает снизу, тексты проявляются по строкам (scripts/main.js). */
+
+.show {
+  position: relative;
+  height: calc(1053 * var(--u));
+  overflow: hidden;
+  background: var(--color-yellow);
+}
+
+.show__title {
+  position: absolute;
+  top: calc(52.5 * var(--u));
+  left: calc(50% - 561 * var(--u));
+  width: calc(1123 * var(--u));
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+.show__accent {
+  display: block;
+  color: var(--color-red);
+}
+
+.show__floor {
+  position: absolute;
+  top: calc(921 * var(--u));
+  left: calc(-658 * var(--u));
+  width: calc(2728 * var(--u));
+  height: calc(682 * var(--u));
+  max-width: none;
+}
+
+/* Компьютер с роликом в экране — устроен как на первом экране: --k — пиксель макета
+   внутри компьютера (ширина 734), экран там же, где .hero__screen. Пока ролик не пошёл,
+   экран прозрачный и сквозь стекло виден жёлтый фон, как в макете. */
+.show__computer {
+  --k: calc(100cqw / 734);
+
+  position: absolute;
+  top: calc(440 * var(--u));
+  left: calc(50% - 368 * var(--u));
+  width: calc(734 * var(--u));
+  container-type: inline-size;
+}
+
+.show__body {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.show__screen {
+  position: absolute;
+  top: calc(71 * var(--k));
+  left: calc(182 * var(--k));
+  width: calc(391.2 * var(--k));
+  height: calc(268.3 * var(--k));
+  overflow: hidden;
+  border-radius: calc(5.87 * var(--k));
+}
+
+/* Блоки 395 в высоту с центром на 667.5, текст в них по центру по вертикали */
+.show__text {
+  position: absolute;
+  top: calc(470 * var(--u));
+  display: flex;
+  height: calc(395 * var(--u));
+  flex-direction: column;
+  justify-content: center;
+  font-size: max(14px, calc(18 * var(--u)));
+  font-weight: 400;
+  line-height: 1.667;
+}
+
+.show__text--left {
+  left: calc(78 * var(--u));
+  width: calc(394 * var(--u));
+}
+
+.show__text--right {
+  left: calc(1045 * var(--u));
+  width: calc(317 * var(--u));
+}
+
+/* Экран «Много — не значит плохо» — макет 1440×818, красный фон, только заголовок.
+   На сайте высотой в окно, по вертикали от середины, как «улица уже кричала». */
+
+.plenty {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.plenty__title {
+  position: absolute;
+  top: calc(50% - 310 * var(--u));
+  left: calc(50% - 561 * var(--u));
+  width: calc(1123 * var(--u));
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+.plenty__accent {
+  color: var(--color-yellow);
+}
+
+/* Переход «продажа через шоу» → «Много — не значит плохо»: блок закрепляется, когда
+   низ экрана с компьютером доходит до низа окна, и красный экран въезжает слева
+   направо поверх него (xPercent задаёт scripts/main.js). Экран с компьютером не ниже
+   окна, красный — нижний экран блока высотой в окно, как в переходе ноутбук → улица.
+   Без JS экраны идут друг под другом. */
+
+.shift--active {
+  position: relative;
+  overflow: hidden;
+}
+
+.shift--active .show {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.shift--active .plenty {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Экран «Иногда перегруженный экран…» — макет 1440×818, красный фон, по центру
+   карточка-окошко со значком (та же, что на экране 5, .note__card), по бокам тексты.
+   Карточка влетает слева, как брошенный сюрикен (scripts/main.js). */
+
+.dense {
+  --c: var(--u);
+
+  position: relative;
+  height: calc(818 * var(--u));
+  overflow: hidden;
+  background: var(--color-red);
+  color: var(--color-cream);
+}
+
+.dense__text {
+  position: absolute;
+  font-size: max(14px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.dense__text--left {
+  top: calc(154 * var(--u));
+  left: calc(50% - 634 * var(--u));
+  width: calc(292 * var(--u));
+}
+
+.dense__text--right {
+  top: calc(348 * var(--u));
+  left: calc(50% + 367 * var(--u));
+  width: calc(321 * var(--u));
+}
+
+/* Центр карточки в макете — по центру экрана по горизонтали и на 36.5 выше середины:
+   слой поднят на 73, его середина на 36.5 выше середины секции */
+.dense__window {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: calc(-73 * var(--u));
+  padding: 0 calc(16 * var(--u));
+  pointer-events: none;
+}
+
+.dense .note__card {
+  top: 0;
+  left: 0;
+  width: calc(650.45 * var(--c));
+  /* секция задаёт кремовый текст для боковых абзацев, в карточке он тёмный */
+  color: var(--color-dark);
+  pointer-events: auto;
+}
+
+/* Текст по центру карточки по вертикали, значок — на 36 ниже шапки, как на экране 5 */
+.dense .note__body {
+  padding: calc(22 * var(--c)) calc(37.8 * var(--c)) calc(22 * var(--c)) calc(36 * var(--c));
+}
+
+.dense .note__icon {
+  margin-top: calc(14 * var(--c));
+}
+
+/* Экран «Посмотрите снова» — макет 1440×789, жёлтый фон, заголовок в две строки
+   по центру по вертикали. Строки выезжают с разных сторон (scripts/main.js), поэтому
+   каждая — отдельный блок шириной по тексту. */
+
+/* Последний экран — не ниже окна: иначе в конце страницы над ним видна полоска
+   предыдущего экрана. Заголовок отсчитан от середины и остаётся по центру. */
+.again {
+  position: relative;
+  height: calc(789 * var(--u));
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--color-yellow);
+}
+
+.again__title {
+  position: absolute;
+  top: calc(50% - 229 * var(--u));
+  left: calc(50% - 598 * var(--u));
+  width: calc(1197 * var(--u));
+  font-family: var(--font-display);
+  font-size: calc(280 * var(--u));
+  font-weight: 400;
+  line-height: calc(229 * var(--u));
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+
+.again__line {
+  display: block;
+  width: fit-content;
+}
+
+.again__line--accent {
+  color: var(--color-red);
+}
+
+/* Экран «Изменились технологии…» — макет 1440×547: та же карточка со значком и в том
+   же месте, что на экране 5, поэтому секция — .note со всеми её стилями.
+
+   Переход «Посмотрите снова» → карточка: блок закрепляется, строки заголовка
+   разъезжаются в стороны, карточка поднимается снизу (сдвиги задаёт scripts/main.js).
+   Карточка — слой высотой в окно поверх экрана с заголовком, фон у неё прозрачный:
+   жёлтый остаётся тем же. Без JS экраны идут друг под другом. */
+
+.outro--active {
+  position: relative;
+  overflow: hidden;
+}
+
+.outro--active .stop {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+  background: none;
+  pointer-events: none;
+}
+
+.outro--active .stop .note__card {
+  pointer-events: auto;
+}
+
+/* Последний экран — титры в компьютере. Макет 1440×671, красный фон; компьютер
+   по центру (в макете отступы сверху и снизу почти равны — 44 и 45). Не ниже окна,
+   как «Посмотрите снова», чтобы в конце страницы не было видно предыдущего экрана.
+   Сцена устроена как на первом экране: --k — пиксель макета внутри сцены (ширина 734),
+   экран там же, где .hero__screen. В экране — гифка с титрами (406×280, чуть больше
+   экрана, края обрезаются, как в макете). */
+
+.authors {
+  display: flex;
+  min-height: calc(671 * var(--u));
+  min-height: max(calc(671 * var(--u)), 100svh);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-red);
+}
+
+.authors__scene {
+  --k: calc(100cqw / 734);
+
+  position: relative;
+  width: calc(734 * var(--u));
+  container-type: inline-size;
+}
+
+.authors__computer {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.authors__screen {
+  position: absolute;
+  top: calc(71 * var(--k));
+  left: calc(182 * var(--k));
+  width: calc(391.2 * var(--k));
+  height: calc(268.3 * var(--k));
+  overflow: hidden;
+  border-radius: calc(5.87 * var(--k));
+  background: var(--color-cream);
+}
+
+.authors__captions {
+  position: absolute;
+  top: calc(-5.01 * var(--k));
+  left: calc(-4.57 * var(--k));
+  width: calc(406 * var(--k));
+  height: calc(280 * var(--k));
+  max-width: none;
+}
+
+/* Обёртки закрепления от ScrollTrigger (.pin-spacer) у всех переходов. Браузер
+   прокручивает страницу раньше, чем срабатывает JS, и в момент закрепления успевает
+   нарисовать кадр, где блок уже сдвинут скроллом на несколько px, — в щель видна
+   обёртка. Прозрачной через неё просвечивал бы жёлтый фон страницы.
+   Щель бывает в двух местах: скролл вниз в начале перехода — под блоком, он стоит
+   вверху обёртки; скролл вверх с конца — над блоком, он стоит внизу обёртки, сразу
+   за длиной прокрутки. Поэтому сверху, на длину прокрутки, обёртка цвета конечного
+   экрана, ниже — начального. */
+
+/* «Очень громко» → лифт, ноутбук → улица, кот → гуси: и начало, и конец красные.
+   «Продажа через шоу» → «Много…»: конец красный, а внизу экрана с компьютером
+   красно-белый пол — красный под ним заметен меньше жёлтого */
+.pin-spacer:has(> .swap--active),
+.pin-spacer:has(> .cover--active),
+.pin-spacer:has(> .drift--active),
+.pin-spacer:has(> .shift--active) {
+  background: var(--color-red);
+}
+
+/* «Посмотрите» → мониторы: конец красный, а начало жёлтое, как фон страницы.
+   Длина прокрутки — один экран (end: "+=100%" в scripts/main.js). */
+.pin-spacer:has(> .wipe--active) {
+  background: linear-gradient(var(--color-red) 100vh, transparent 0);
+}
+
+/* Ролики в телевизорах (scripts/tv-videos.js + main.js). Видео появляется, только когда
+   пошли кадры, — до этого видно то, что нарисовано в макете. */
+.tv-video {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* подложка — на случай роликов с прозрачностью (WebM с альфа-каналом) */
+  background: #000;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tv-video.is-playing {
+  visibility: visible;
+}
+
+/* Подпись к роликам под лицензией CC BY — обязательна по условиям лицензии */
+.credits {
+  padding: calc(24 * var(--u)) calc(84 * var(--u));
+  background: var(--color-yellow);
+  color: var(--color-dark);
+  font-size: max(11px, calc(12 * var(--u)));
+  line-height: 1.5;
+  opacity: .7;
+}
+
+.credits a {
+  color: inherit;
+}
+
+/* Мобильные: заголовок на всю ширину, компьютер крупнее */
+
+@media (max-width: 700px) {
+  /* Карточки-окошки на всю ширину экрана без полей: --c — пиксель карточки
+     (ширина карточки в макете — в знаменателе) */
+  .note,
+  .ask {
+    --c: calc((100vw - 32 * var(--m)) / 615);
+  }
+
+  .qing {
+    --c: calc((100vw - 32 * var(--m)) / 433);
+  }
+
+  .chindon {
+    --c: calc((100vw - 32 * var(--m)) / 517);
+  }
+
+  .dense {
+    --c: calc((100vw - 32 * var(--m)) / 650);
+  }
+
+  /* Экран 3: на планшетах отступы от ширины 1024, здесь — от 390 */
+  .noise {
+    gap: calc(40 * var(--m));
+    padding: calc(72 * var(--m)) calc(24 * var(--m));
+  }
+
+  .noise__text {
+    max-width: none;
+    font-size: max(15px, calc(17 * var(--m)));
+  }
+
+  .noise__collage {
+    width: min(100%, calc(440 * var(--m)));
+  }
+
+  .hero {
+    padding: calc(48 * var(--m)) calc(16 * var(--m));
+  }
+
+  .hero__title {
+    font-size: calc((100vw - 32 * var(--m)) * .2365);
+    line-height: 1.1975;
+  }
+
+  .hero__scene {
+    width: min(100%, calc(560 * var(--m)));
+    margin-top: calc((100vw - 32 * var(--m)) * -.05);
+  }
+
+  .monitors {
+    --item: min(78vw, calc(420 * var(--m)));
+    --gap: calc(4 * var(--m));
+    --offset: calc(16 * var(--m));
+    --duration: 24s;
+
+    min-height: 0;
+    padding: calc(64 * var(--m)) 0;
+  }
+
+  /* Как на десктопе: заголовок слева, клин справа сверху и не заходит под текст */
+  .loud {
+    display: flex;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) calc(16 * var(--m));
+  }
+
+  .loud__wedge,
+  .loud__ink {
+    clip-path: polygon(64% 0, 100% 0, 100% 72%);
+  }
+
+  /* копия заголовка должна стоять там же, где оригинал в потоке секции */
+  .loud__ink {
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) calc(16 * var(--m));
+  }
+
+  .loud__title {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+  }
+
+  .loud__man {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: min(48vw, calc(300 * var(--m)));
+    margin-top: -4vw;
+    align-self: flex-end;
+  }
+
+  .din {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    gap: calc(32 * var(--m));
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) calc(48 * var(--m));
+  }
+
+  .din__title {
+    position: static;
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+  }
+
+  .din__pcs {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 4%;
+  }
+
+  .pc {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .pc--small {
+    width: 40%;
+  }
+
+  .pc--large {
+    width: 56%;
+  }
+
+  /* карточка по центру: смещение из макета на узком экране упёрло бы тень в край */
+  .note {
+    min-height: 0;
+    padding: calc(56 * var(--m)) calc(16 * var(--m));
+  }
+
+  .note__card {
+    top: 0;
+    left: 0;
+  }
+
+  /* Лифт по центру, тексты над ним и под ним во всю ширину */
+  .lift {
+    height: 100vh;
+    height: 100svh;
+    min-height: calc(560 * var(--m));
+  }
+
+  .lift__title {
+    top: calc(56 * var(--m));
+    left: calc(16 * var(--m));
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+  }
+
+  .lift__door {
+    width: min(44vw, calc(240 * var(--m)));
+  }
+
+  .lift__text {
+    right: calc(16 * var(--m));
+    left: calc(16 * var(--m));
+    width: auto;
+    font-size: max(13px, calc(15 * var(--m)));
+    line-height: 1.7;
+  }
+
+  .lift__text--left {
+    top: calc(40 * var(--m));
+  }
+
+  .lift__text--right {
+    top: auto;
+    bottom: calc(32 * var(--m));
+  }
+
+  /* Ноутбук сверху, тексты под ним в колонку */
+  .laptop {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    gap: calc(24 * var(--m));
+    padding: calc(48 * var(--m)) calc(16 * var(--m)) calc(56 * var(--m));
+  }
+
+  .laptop__device {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: min(100%, calc(420 * var(--m)));
+    margin: 0 auto calc(8 * var(--m));
+  }
+
+  .laptop__text {
+    position: static;
+    width: auto;
+    font-size: max(13px, calc(15 * var(--m)));
+    line-height: 1.7;
+  }
+
+  /* Тексты над карточкой и под ней во всю ширину */
+  .ask {
+    height: 100vh;
+    height: 100svh;
+    min-height: calc(520 * var(--m));
+  }
+
+  .ask__text {
+    right: calc(16 * var(--m));
+    left: calc(16 * var(--m));
+    width: auto;
+    font-size: max(13px, calc(15 * var(--m)));
+  }
+
+  .ask__text--left {
+    top: calc(40 * var(--m));
+    left: calc(16 * var(--m));
+  }
+
+  .ask__text--right {
+    top: auto;
+    bottom: calc(40 * var(--m));
+    left: calc(16 * var(--m));
+    text-align: right;
+  }
+
+  /* Заголовок на всю ширину, подпись под ним */
+  .street {
+    display: flex;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(24 * var(--m));
+    padding: calc(56 * var(--m)) calc(16 * var(--m));
+  }
+
+  .street__title,
+  .street__text {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .street__title {
+    width: auto;
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+  }
+
+  .street__text {
+    bottom: auto;
+    width: auto;
+    max-width: calc(320 * var(--m));
+    margin-block: 0;
+    align-self: flex-end;
+    font-size: max(13px, calc(15 * var(--m)));
+  }
+
+  .street__text br {
+    display: none;
+  }
+
+  /* Карточка сверху по центру, облака и котёнок под ней */
+  .qing {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) 0;
+  }
+
+  .qing__window {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 1;
+    max-width: 100%;
+  }
+
+  .qing__clouds {
+    top: auto;
+    bottom: -20%;
+    left: -6%;
+    width: 90%;
+    height: auto;
+  }
+
+  .qing__cat {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: min(64vw, calc(320 * var(--m)));
+    height: auto;
+    margin: calc(40 * var(--m)) 0 -12%;
+    align-self: flex-start;
+    margin-left: 8%;
+  }
+
+  /* Как экран выше, только зеркально: гуси и облака справа под карточкой */
+  .chindon {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) 0;
+  }
+
+  .chindon__window {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 1;
+    max-width: 100%;
+  }
+
+  .chindon__clouds {
+    top: auto;
+    right: -6%;
+    bottom: -20%;
+    left: auto;
+    width: 90%;
+    height: auto;
+  }
+
+  .chindon__geese {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 2;
+    width: min(80vw, calc(400 * var(--m)));
+    height: auto;
+    margin: calc(-24 * var(--m)) calc(-16 * var(--m)) calc(24 * var(--m)) 0;
+    align-self: flex-end;
+  }
+
+  /* В переходе экраны высотой в окно: котёнок прижат к низу, гуси — тоже вниз */
+  .drift--active .qing__cat,
+  .drift--active .chindon__geese {
+    margin-top: auto;
+  }
+
+  /* Заголовок, тексты, под ними компьютер на полу */
+  .show {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    gap: calc(24 * var(--m));
+    padding: calc(56 * var(--m)) calc(16 * var(--m)) 0;
+  }
+
+  .show__title,
+  .show__text,
+  .show__computer {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .show__title {
+    width: auto;
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+  }
+
+  .show__text {
+    width: auto;
+    height: auto;
+    font-size: max(13px, calc(15 * var(--m)));
+  }
+
+  .show__text--right {
+    max-width: calc(320 * var(--m));
+    align-self: flex-end;
+  }
+
+  /* компьютер последним, клавиатура стоит на полу */
+  .show__computer {
+    z-index: 1;
+    order: 1;
+    width: min(100%, calc(420 * var(--m)));
+    height: auto;
+    margin: calc(16 * var(--m)) auto 8vw;
+  }
+
+  .show__floor {
+    top: auto;
+    bottom: 0;
+    left: -60%;
+    width: 220%;
+    height: auto;
+  }
+
+  .plenty__title {
+    top: 50%;
+    right: calc(16 * var(--m));
+    left: calc(16 * var(--m));
+    width: auto;
+    font-size: calc((100vw - 32 * var(--m)) * .26);
+    line-height: .818;
+    transform: translateY(-50%);
+  }
+
+  /* Текст, карточка, текст — в колонку */
+  .dense {
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    gap: calc(40 * var(--m));
+    padding: calc(56 * var(--m)) calc(16 * var(--m));
+  }
+
+  .dense__text,
+  .dense__window {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .dense__text {
+    width: auto;
+    font-size: max(13px, calc(15 * var(--m)));
+  }
+
+  .dense__text--right {
+    max-width: calc(320 * var(--m));
+    align-self: flex-end;
+  }
+
+  .dense__window {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  /* Заголовок по ширине экрана, как «Посмотрите» на первом экране */
+  .again {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .again__title {
+    top: 50%;
+    right: calc(16 * var(--m));
+    left: calc(16 * var(--m));
+    width: auto;
+    font-size: calc((100vw - 32 * var(--m)) * .2365);
+    line-height: .818;
+    transform: translateY(-50%);
+  }
+
+  .authors {
+    padding: calc(48 * var(--m)) calc(16 * var(--m));
+  }
+
+  .authors__scene {
+    width: min(100%, calc(560 * var(--m)));
+  }
+
+  .credits {
+    padding: calc(24 * var(--m)) calc(16 * var(--m));
+  }
+}

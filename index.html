@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f9e75c" />
+    <title>Посмотрите — реклама</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap"
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/BebasNeueCyrillic.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"
+      defer
+    ></script>
+    <script src="scripts/tv-videos.js" defer></script>
+    <script src="scripts/main.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <div class="wipe">
+        <section class="hero" aria-labelledby="hero-title">
+          <h1 class="hero__title" id="hero-title">Посмотрите</h1>
+
+          <div class="hero__scene">
+            <img
+              class="hero__computer"
+              src="assets/images/computer.png"
+              width="734"
+              height="582"
+              alt="Ретро-компьютер"
+            />
+
+            <div class="hero__screen" data-tv="hero">
+              <div class="screen-slot">
+                <img
+                  class="screen-slot__icon"
+                  src="assets/icons/image-placeholder.svg"
+                  width="27"
+                  height="27"
+                  alt=""
+                />
+                <p class="screen-slot__caption">Кадр рекламы на экране</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="monitors">
+          <div class="monitors__track">
+            <div class="monitors__group">
+              <div class="monitors__item" data-tv="monitor-1">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-2">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-3">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-4">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-5">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-6">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="monitors__group" aria-hidden="true">
+              <div class="monitors__item" data-tv="monitor-1">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-2">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-3">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-4">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-5">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+              <div class="monitors__item" data-tv="monitor-6">
+                <img
+                  class="monitors__body"
+                  src="assets/images/computer-red.png"
+                  width="582"
+                  height="462"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="noise">
+        <p class="noise__text noise__text--top">
+          <span class="noise__row">На экранах всё мигает, кричит</span>
+          <span class="noise__row"
+            ><span class="nobr">и меняется</span> быстрее, чем вы
+            успеваете</span
+          >
+          <span class="noise__row">понять, что происходит.</span>
+        </p>
+
+        <div class="noise__collage">
+          <img
+            class="noise__img noise__img--center"
+            src="assets/images/beer-center.png"
+            width="359"
+            height="341"
+            alt=""
+            loading="lazy"
+          />
+          <img
+            class="noise__img noise__img--left"
+            src="assets/images/beer-left.png"
+            width="167"
+            height="197"
+            alt=""
+            loading="lazy"
+          />
+          <img
+            class="noise__img noise__img--right"
+            src="assets/images/beer-right.png"
+            width="185"
+            height="186"
+            alt=""
+            loading="lazy"
+          />
+          <img
+            class="noise__img noise__img--glasses"
+            src="assets/images/beer-glasses.png"
+            width="321"
+            height="400"
+            alt=""
+            loading="lazy"
+          />
+        </div>
+
+        <p class="noise__text noise__text--bottom">
+          Но если посмотреть несколько таких роликов подряд, быстро замечаешь
+          одну <span class="nobr">и ту</span> же схему: название продукта
+          повторяют снова <span class="nobr">и снова</span>, пока оно буквально
+          <span class="nobr">не застревает</span>
+          <span class="nobr">в голове</span>.
+        </p>
+      </section>
+
+      <div class="swap">
+        <section class="loud" aria-labelledby="loud-title">
+          <div class="loud__wedge" aria-hidden="true"></div>
+          <h2 class="loud__title" id="loud-title">Очень громко</h2>
+          <div class="loud__ink" aria-hidden="true">
+            <div class="loud__title loud__title--ink">Очень громко</div>
+          </div>
+          <img
+            class="loud__man"
+            src="assets/images/beer-can-man.png"
+            width="316"
+            height="405"
+            alt="Человек в костюме пивной банки"
+            loading="lazy"
+          />
+        </section>
+
+        <section class="din" aria-labelledby="din-title">
+          <h2 class="din__title" id="din-title">
+            Очень много <span class="din__accent">шума</span>
+          </h2>
+
+          <div class="din__pcs">
+            <div class="pc pc--small">
+              <img
+                class="pc__body"
+                src="assets/images/computer.png"
+                width="240"
+                height="190"
+                alt=""
+                loading="lazy"
+              />
+              <div class="pc__screen" data-tv="din-1"></div>
+            </div>
+            <div class="pc pc--large">
+              <img
+                class="pc__body"
+                src="assets/images/computer.png"
+                width="335"
+                height="265"
+                alt=""
+                loading="lazy"
+              />
+              <div class="pc__screen" data-tv="din-2"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="note">
+          <div class="note__card">
+            <div class="note__bar" aria-hidden="true">
+              <span class="note__dot"></span>
+              <span class="note__dot"></span>
+              <span class="note__dot note__dot--red"></span>
+            </div>
+            <div class="note__body">
+              <div class="note__icon" aria-hidden="true">?</div>
+              <p class="note__text">
+                И если видео можно закрыть или пролистать, иногда реклама
+                оказывается в месте, откуда так просто не уйти...
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="lift" aria-labelledby="lift-title">
+          <h2 class="lift__title" id="lift-title">в лифте</h2>
+
+          <div class="lift__stage">
+            <img
+              class="lift__door"
+              src="assets/images/elevator.png"
+              width="530"
+              height="942"
+              alt="Двери лифта"
+            />
+          </div>
+
+          <p class="lift__text lift__text--left">
+            В Китае рекламные экраны давно стали обычной частью лифтов в жилых
+            домах<br />и офисах.
+          </p>
+          <p class="lift__text lift__text--right">
+            Один из крупнейших операторов такой рекламы, Focus Media, пишет, что
+            его сеть охватывает 300 городов, больше трёх миллионов экранов и
+            около 400 миллионов человек ежедневно.
+          </p>
+        </section>
+      </div>
+
+      <div class="cover">
+        <section class="laptop">
+          <div class="laptop__device">
+            <div class="laptop__screen" data-tv="laptop">
+              <img
+                class="laptop__shot"
+                src="assets/images/laptop-screen.png"
+                width="426"
+                height="240"
+                alt="Записи с камер в лифтах с рекламными экранами"
+                loading="lazy"
+              />
+            </div>
+            <img
+              class="laptop__body"
+              src="assets/images/laptop.png"
+              width="544"
+              height="544"
+              alt=""
+              loading="lazy"
+            />
+          </div>
+
+          <p class="laptop__text laptop__text--top">
+            В Китае рекламные экраны давно стали обычной частью лифтов в жилых
+            домах и офисах.
+          </p>
+          <p class="laptop__text laptop__text--bottom">
+            Один из крупнейших операторов такой рекламы, Focus Media, пишет, что
+            его сеть охватывает 300 городов, больше трёх миллионов экранов и
+            около 400 миллионов человек ежедневно.
+          </p>
+        </section>
+
+        <section class="ask">
+          <div class="ask__layer">
+            <p class="ask__text ask__text--left">
+              Сегодня реклама добралась<br />даже до лифтов.
+            </p>
+            <p class="ask__text ask__text--right">
+              Но борьба<br />за внимание покупателей<br />началась задолго до
+              экранов.
+            </p>
+
+            <div class="ask__window">
+              <div class="note__card">
+                <div class="note__bar" aria-hidden="true">
+                  <span class="note__dot"></span>
+                  <span class="note__dot"></span>
+                  <span class="note__dot note__dot--red"></span>
+                </div>
+                <div class="note__body">
+                  <div class="note__icon" aria-hidden="true">?</div>
+                  <p class="note__text">
+                    На то, какой реклама<br />стала сегодня, повлияло<br />множество
+                    исторических<br />и культурных факторов.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="street" aria-labelledby="street-title">
+          <h2 class="street__title" id="street-title">улица уже кричала</h2>
+          <p class="street__text">
+            В старом Китае уличные торговцы не просто выкрикивали цены.
+            <br />Они придумывали рифмы, <br />пели и превращали <br />описание
+            товара <br />в короткое выступление.
+          </p>
+        </section>
+      </div>
+
+      <div class="drift">
+        <section class="qing">
+          <img
+            class="qing__clouds"
+            src="assets/images/clouds.png"
+            width="639"
+            height="798"
+            alt=""
+            loading="lazy"
+          />
+
+          <div class="qing__window">
+            <div class="note__card">
+              <div class="note__bar" aria-hidden="true">
+                <span class="note__dot"></span>
+                <span class="note__dot"></span>
+                <span class="note__dot note__dot--red"></span>
+              </div>
+              <div class="note__body">
+                <p class="note__text">
+                  В эпоху Цин такие выкрики<br />даже записывали <br />в
+                  специальные сборники.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <img
+            class="qing__cat"
+            src="assets/images/cat-qing.png"
+            width="425"
+            height="566"
+            alt="Котёнок в конической шляпе и китайском халате"
+            loading="lazy"
+          />
+        </section>
+
+        <section class="chindon">
+          <div class="chindon__window">
+            <div class="note__card">
+              <div class="note__bar" aria-hidden="true">
+                <span class="note__dot"></span>
+                <span class="note__dot"></span>
+                <span class="note__dot note__dot--red"></span>
+              </div>
+              <div class="note__body">
+                <p class="note__text">
+                  В Японии в XIX веке<br />появились уличные рекламщики —<br />предшественники
+                  тиндонъя.<br />В ярких костюмах, с барабанами<br />и
+                  музыкальными инструментами<br />они ходили по улицам,<br />привлекая
+                  покупателей.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <img
+            class="chindon__clouds"
+            src="assets/images/clouds.png"
+            width="639"
+            height="798"
+            alt=""
+            loading="lazy"
+          />
+
+          <img
+            class="chindon__geese"
+            src="assets/images/geese.png"
+            width="621"
+            height="654"
+            alt="Летящие гуси"
+            loading="lazy"
+          />
+        </section>
+      </div>
+
+      <div class="shift">
+        <section class="show" aria-labelledby="show-title">
+          <h2 class="show__title" id="show-title">
+            продажа <span class="show__accent">через шоу</span>
+          </h2>
+
+          <img
+            class="show__floor"
+            src="assets/images/checker-floor.png"
+            width="2728"
+            height="682"
+            alt=""
+            loading="lazy"
+          />
+
+          <div class="show__computer">
+            <img
+              class="show__body"
+              src="assets/images/computer.png"
+              width="734"
+              height="582"
+              alt="Ретро-компьютер"
+              loading="lazy"
+            />
+            <div class="show__screen" data-tv="show"></div>
+          </div>
+
+          <div class="show__text show__text--left">
+            <p>
+              Один из распространённых<br />форматов телерекламы —<br />всего 15
+              секунд.
+            </p>
+            <p>
+              Отсюда — абсурд,<br />странные костюмы,<br />знаменитости,
+              навязчивые мелодии<br />и преувеличенные эмоции.
+            </p>
+          </div>
+          <div class="show__text show__text--right">
+            <p>
+              В 2007 году SoftBank<br />запустил серию роликов,<br />в которых
+              отцом обычной<br />человеческой семьи оказался<br />говорящий
+              белый пёс.
+            </p>
+          </div>
+        </section>
+
+        <section class="plenty" aria-labelledby="plenty-title">
+          <h2 class="plenty__title" id="plenty-title">
+            Много —<br />не значит<br /><span class="plenty__accent"
+              >плохо</span
+            >
+          </h2>
+        </section>
+      </div>
+
+      <section class="dense">
+        <p class="dense__text dense__text--left">
+          Иногда перегруженный экран<br />кажется плохим дизайном.<br />Но для
+          части аудитории<br />множество цен, плашек<br />и акций —<br />это
+          возможность сравнить предложения<br />и найти выгоду.
+        </p>
+
+        <div class="dense__window">
+          <div class="note__card">
+            <div class="note__bar" aria-hidden="true">
+              <span class="note__dot"></span>
+              <span class="note__dot"></span>
+              <span class="note__dot note__dot--red"></span>
+            </div>
+            <div class="note__body">
+              <div class="note__icon" aria-hidden="true">?</div>
+              <p class="note__text">
+                В 2016 году исследователи<br />Nielsen Norman Group сравнили,<br />как
+                китайские и иностранные<br />пользователи воспринимают<br />сложные
+                сайты.<br />Китайские участники оказались<br />более привычными
+                к высокой<br />плотности информации.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="dense__text dense__text--right">
+          Но и им было трудно<br />ориентироваться на слишком<br />перегруженных
+          страницах.<br />Граница между «достаточно информации»<br />и «слишком
+          много информации»<br />может восприниматься по-разному.
+        </p>
+      </section>
+
+      <div class="outro">
+        <section class="again" aria-labelledby="again-title">
+          <h2 class="again__title" id="again-title">
+            <span class="again__line">посмотрите</span>
+            <span class="again__line again__line--accent">снова</span>
+          </h2>
+        </section>
+
+        <section class="note stop">
+          <div class="note__card">
+            <div class="note__bar" aria-hidden="true">
+              <span class="note__dot"></span>
+              <span class="note__dot"></span>
+              <span class="note__dot note__dot--red"></span>
+            </div>
+            <div class="note__body">
+              <div class="note__icon" aria-hidden="true">?</div>
+              <p class="note__text">
+                Изменились технологии,<br />но сохранилась старая задача:<br />заставить
+                прохожего<br />остановиться и посмотреть.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="authors">
+        <div class="authors__scene">
+          <img
+            class="authors__computer"
+            src="assets/images/computer.png"
+            width="734"
+            height="582"
+            alt=""
+            loading="lazy"
+          />
+          <div class="authors__screen">
+            <img
+              class="authors__captions"
+              src="assets/video/captions.gif"
+              width="406"
+              height="280"
+              alt="Студент: Мешавкина Алина. Группа: Б25ДЗ09. Куратор: Олег Пащенко."
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

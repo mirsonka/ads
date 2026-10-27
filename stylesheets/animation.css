@@ -1,0 +1,59 @@
+/* Бесконечная лента: трек состоит из двух одинаковых половин */
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Головы на экране 3: полный оборот от наклона из макета (--angle) и лёгкое парение.
+   Направление задаётся animation-direction у конкретной головы. */
+
+@keyframes head-spin {
+  from {
+    rotate: var(--angle);
+  }
+
+  to {
+    rotate: calc(var(--angle) + 360deg);
+  }
+}
+
+@keyframes head-float {
+  from {
+    translate: 0 calc(4 * var(--u));
+  }
+
+  to {
+    translate: 0 calc(-4 * var(--u));
+  }
+}
+
+/* Заголовок «Посмотрите»: резкий рывок до 108%, спад чуть ниже пика и плавный возврат
+   к исходному размеру перед следующим ударом. Больше 108% не стоит: на телефоне
+   заголовок на всю ширину в пике и так доходит почти до краёв экрана (~6px). */
+
+@keyframes title-punch {
+  0% {
+    scale: 1;
+    animation-timing-function: cubic-bezier(.2, 0, 0, 1);
+  }
+
+  10% {
+    scale: 1.08;
+    animation-timing-function: ease-in-out;
+  }
+
+  30% {
+    scale: 1.04;
+    animation-timing-function: ease-in-out;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
