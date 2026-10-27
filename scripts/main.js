@@ -47,6 +47,7 @@ const layoutPx = (value) =>
 // Экран 3, экран с ноутбуком и «продажа через шоу»: абзацы проявляются по строкам вместе со скроллом
 // (opacity 0 → 1, y 30px → 0), при обратном скролле прячутся обратно. Строки
 // пересобираются при смене ширины и после загрузки шрифта (autoSplit).
+// Тексты в лифте проявляются так же, но внутри таймлайна закрепления — см. ниже.
 // При prefers-reduced-motion текст просто виден.
 (() => {
   const texts = document.querySelectorAll(
@@ -81,10 +82,11 @@ const layoutPx = (value) =>
               // абзаца страница уже кончается
               start: "clamp(top 90%)",
               end: "clamp(bottom 60%)",
-              // «продажа через шоу» — внизу страницы, тексты низко на экране:
-              // заканчиваем, когда экран целиком в окне, вместе с компьютером
-              ...(text.closest(".show") && {
-                endTrigger: text.closest(".show"),
+              // «продажа через шоу» и «Иногда перегруженный экран…» — тексты низко
+              // на экране: заканчиваем, когда экран целиком в окне (дальше «через шоу»
+              // закрепляется для перехода, а «перегруженный экран» — для остановки)
+              ...(text.closest(".show, .dense") && {
+                endTrigger: text.closest(".show, .dense"),
                 end: "clamp(bottom bottom)",
               }),
               scrub: 0.6,
@@ -166,6 +168,39 @@ const layoutPx = (value) =>
 
   shake.push({ x: 0, y: 0, rotation: -2, duration: step, ease: "sine.inOut" });
 
+  // Тексты по бокам лифта проявляются по строкам, как абзацы на экране 3: сначала
+  // строки левого, потом правого. Строки пересобираются при смене ширины (autoSplit) —
+  // этап перестраивается на новых строках, его длина от числа строк не зависит.
+  const liftReveal = gsap.timeline();
+  const revealLift = (targets) =>
+    liftReveal
+      .clear()
+      .fromTo(
+        targets,
+        { autoAlpha: 0, y: () => layoutPx(30) },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power1.out",
+          stagger: { amount: 1 },
+        },
+      );
+
+  if (window.SplitText) {
+    gsap.registerPlugin(SplitText);
+    SplitText.create(liftTexts, {
+      type: "lines",
+      linesClass: "text-line",
+      autoSplit: true,
+      onSplit: (self) => {
+        revealLift(self.lines);
+      },
+    });
+  } else {
+    revealLift(liftTexts);
+  }
+
   const timeline = gsap
     .timeline({ defaults: { ease: "power2.inOut" }, paused: true })
     .fromTo(
@@ -206,22 +241,18 @@ const layoutPx = (value) =>
     )
     .fromTo(
       door,
-      // масштаб от верхнего края — верх лифта ровно на уровне верха заголовка
+      // масштаб от верхнего края — верх лифта на 115 от верха экрана, как в макете
+      // (на телефонах — на уровне верха заголовка, 56); сам заголовок на десктопе выше
       {
-        y: () => liftTitle.offsetTop - door.offsetTop,
+        y: () => layoutPx(matchMedia("(max-width: 700px)").matches ? 56 : 115) - door.offsetTop,
         scale: 551.4 / 530.2,
         transformOrigin: "50% 0",
       },
       { y: 0, scale: 1, duration: 1 },
       "<",
     )
-    // тексты по бокам проявляются снизу, когда лифт почти на месте
-    .fromTo(
-      liftTexts,
-      { autoAlpha: 0, y: () => layoutPx(30) },
-      { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.3 },
-      ">",
-    );
+    // тексты по бокам проявляются по строкам, когда лифт на месте
+    .add(liftReveal, ">");
   // пустой отрезок в конце: карточка стоит, пока не прокрутят pause экрана
   // .to({}, { duration: pause })
 
@@ -265,14 +296,17 @@ const layoutPx = (value) =>
   cover.classList.add("cover--active");
 
   // Длительности — в экранах скролла. pause — «холостой» скролл между заливкой
-  // и въездом красного экрана, чтобы карточку успели рассмотреть.
+  // и въездом красного экрана, чтобы карточку успели рассмотреть. hold — такой же
+  // скролл в конце: экран «улица уже кричала» стоит, пока читают подпись.
   const pause = 0.5;
+  const hold = 0.4;
 
   const timeline = gsap
     .timeline({ defaults: { ease: "none" }, paused: true })
     .fromTo(layer, { yPercent: 100 }, { yPercent: 0, duration: 1 })
     .addLabel("street", `+=${pause}`)
-    .fromTo(street, { xPercent: -100 }, { xPercent: 0, duration: 1 }, "street");
+    .fromTo(street, { xPercent: -100 }, { xPercent: 0, duration: 1 }, "street")
+    .to({}, { duration: hold });
 
   // доля этапа (0…1) по времени таймлайна
   const stages = {
@@ -661,6 +695,23 @@ const layoutPx = (value) =>
     //   ],
     //   ease: "sine.inOut",
     // });
+
+    // Короткая остановка: когда низ экрана доходит до низа окна, экран стоит
+    // hold экрана скролла, чтобы карточка успела долететь. Тексты по бокам к этому
+    // моменту уже проявились (см. абзацы выше).
+    const hold = 0.5;
+
+    dense.classList.add("dense--active");
+
+    ScrollTrigger.create({
+      trigger: dense,
+      start: "bottom bottom",
+      end: () => `+=${hold * 100}%`,
+      pin: true,
+      invalidateOnRefresh: true,
+    });
+
+    return () => dense.classList.remove("dense--active");
   });
 })();
 

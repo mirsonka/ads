@@ -647,9 +647,10 @@ body {
   color: var(--color-cream);
 }
 
+/* Выше, чем в макете (115): лифт в кадре 1 остаётся на 115 и не закрывает низ букв */
 .lift__title {
   position: absolute;
-  top: calc(115 * var(--u));
+  top: calc(75 * var(--u));
   left: calc(78 * var(--u));
   font-family: var(--font-display);
   font-size: calc(280 * var(--u));
@@ -684,7 +685,7 @@ body {
   width: calc(321 * var(--u));
   font-size: max(15px, calc(20 * var(--u)));
   font-weight: 500;
-  line-height: 1.8;
+  line-height: 2;
 }
 
 .lift__text--left {
@@ -758,7 +759,7 @@ body {
   position: absolute;
   font-size: max(15px, calc(20 * var(--u)));
   font-weight: 500;
-  line-height: 1.8;
+  line-height: 2;
 }
 
 .laptop__text--top {
@@ -799,9 +800,9 @@ body {
   position: absolute;
   top: calc(50% - 241 * var(--u));
   width: calc(317 * var(--u));
-  font-size: max(14px, calc(18 * var(--u)));
+  font-size: max(15px, calc(20 * var(--u)));
   font-weight: 500;
-  line-height: 1.667;
+  line-height: 2;
 }
 
 .ask__text--left {
@@ -886,21 +887,21 @@ body {
   text-transform: uppercase;
 }
 
-/* По вертикали — по центру второй строки заголовка (от 50% до 50% + 229): блок растянут
-   на эту полосу, высота по тексту, margin auto ставит его посередине. Не через transform —
+/* По вертикали — по центру букв второй строки заголовка: прописные Bebas при кегле 280
+   занимают от 50% до 50% + 184 (строка — до 229, низ пустой). Блок растянут на эту полосу,
+   высота по тексту, margin auto ставит его посередине. Не через transform —
    им подпись двигает GSAP, когда она выезжает справа. */
 .street__text {
   position: absolute;
   top: 50%;
-  bottom: calc(50% - 229 * var(--u));
-  left: calc(1043 * var(--u));
+  bottom: calc(50% - 184 * var(--u));
+  left: calc(1025 * var(--u));
   height: fit-content;
   margin-block: auto;
-  width: calc(258 * var(--u));
-  font-size: max(13px, calc(16 * var(--u)));
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: -.011em;
+  width: calc(370 * var(--u));
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 2;
 }
 
 /* В переходе — слой высотой в окно поверх жёлтого экрана в том же закреплённом блоке.
@@ -1128,9 +1129,9 @@ body {
   height: calc(395 * var(--u));
   flex-direction: column;
   justify-content: center;
-  font-size: max(14px, calc(18 * var(--u)));
-  font-weight: 400;
-  line-height: 1.667;
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 500;
+  line-height: 2;
 }
 
 .show__text--left {
@@ -1212,9 +1213,9 @@ body {
 
 .dense__text {
   position: absolute;
-  font-size: max(14px, calc(20 * var(--u)));
+  font-size: max(15px, calc(20 * var(--u)));
   font-weight: 500;
-  line-height: 1.8;
+  line-height: 2;
 }
 
 .dense__text--left {
@@ -1387,13 +1388,15 @@ body {
    за длиной прокрутки. Поэтому сверху, на длину прокрутки, обёртка цвета конечного
    экрана, ниже — начального. */
 
-/* «Очень громко» → лифт, ноутбук → улица, кот → гуси: и начало, и конец красные.
+/* «Очень громко» → лифт, ноутбук → улица, кот → гуси, остановка на «Иногда
+   перегруженный экран…»: и начало, и конец красные.
    «Продажа через шоу» → «Много…»: конец красный, а внизу экрана с компьютером
    красно-белый пол — красный под ним заметен меньше жёлтого */
 .pin-spacer:has(> .swap--active),
 .pin-spacer:has(> .cover--active),
 .pin-spacer:has(> .drift--active),
-.pin-spacer:has(> .shift--active) {
+.pin-spacer:has(> .shift--active),
+.pin-spacer:has(> .dense--active) {
   background: var(--color-red);
 }
 
@@ -1604,8 +1607,8 @@ body {
     right: calc(16 * var(--m));
     left: calc(16 * var(--m));
     width: auto;
-    font-size: max(13px, calc(15 * var(--m)));
-    line-height: 1.7;
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   .lift__text--left {
@@ -1637,8 +1640,8 @@ body {
   .laptop__text {
     position: static;
     width: auto;
-    font-size: max(13px, calc(15 * var(--m)));
-    line-height: 1.7;
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   /* Тексты над карточкой и под ней во всю ширину */
@@ -1652,7 +1655,8 @@ body {
     right: calc(16 * var(--m));
     left: calc(16 * var(--m));
     width: auto;
-    font-size: max(13px, calc(15 * var(--m)));
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   .ask__text--left {
@@ -1698,11 +1702,8 @@ body {
     max-width: calc(320 * var(--m));
     margin-block: 0;
     align-self: flex-end;
-    font-size: max(13px, calc(15 * var(--m)));
-  }
-
-  .street__text br {
-    display: none;
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   /* Карточка сверху по центру, облака и котёнок под ней */
@@ -1810,7 +1811,8 @@ body {
   .show__text {
     width: auto;
     height: auto;
-    font-size: max(13px, calc(15 * var(--m)));
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   .show__text--right {
@@ -1863,7 +1865,8 @@ body {
 
   .dense__text {
     width: auto;
-    font-size: max(13px, calc(15 * var(--m)));
+    font-size: max(15px, calc(17 * var(--m)));
+    line-height: 1.85;
   }
 
   .dense__text--right {
